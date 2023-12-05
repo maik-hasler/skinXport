@@ -3,9 +3,15 @@
   "name": "Run script automatically",
   "description": "Runs a script on www.example.com automatically when user installs the extension",
   "version": "1.0",
+  "permissions": [
+    "activeTab"
+  ],
   "host_permissions": [
     "https://api.skinport.com/*"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "js": [
