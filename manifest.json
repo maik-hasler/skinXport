@@ -3,13 +3,16 @@
   "name": "Run script automatically",
   "description": "Runs a script on www.example.com automatically when user installs the extension",
   "version": "1.0",
+  "host_permissions": [
+    "https://api.skinport.com/*"
+  ],
   "content_scripts": [
     {
       "js": [
         "content-script.js"
       ],
       "matches": [
-        "http://*.example.com//"
+        "https://skinport.com/de/"
       ]
     }
   ]
