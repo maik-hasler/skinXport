@@ -1,0 +1,33 @@
+.quick-flip-evaluation {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+}
+
+.skinXport-heading {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.skinXport-hr {
+    border: none;
+    height: 1px;
+    /* Set the hr color */
+    color: #8e9191;  /* old IE */
+    background-color: #8e9191;  /* Modern Browsers */
+}
+
+.skinXport-minor-heading {
+    font-size: 12px;
+}
+
+.skinXport-text {
+    color: #747778;
+    font-size: 12px;
+}
+
+.skinXport-recent-stats {
+    display: flex;
+    flex-direction: row;
+}
