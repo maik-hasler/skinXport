@@ -2,24 +2,30 @@ const dbName = 'SkinportSalesDB';
 const objectStoreName = 'MarketSalesStatsStore';
 
 export function openDatabase() {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(dbName, 1);
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(dbName, 1);
 
-      request.onupgradeneeded = function (event) {
-        const db = event.target.result;
-        // Use 'skinName' as the key path for the object store
-        const objectStore = db.createObjectStore(objectStoreName, { keyPath: 'skinName' });
-      };
+    request.onupgradeneeded = function (event) {
+      const db = event.target.result;
 
-      request.onsuccess = function (event) {
-        resolve(event.target.result);
-      };
+      const objectStore = db.createObjectStore(objectStoreName, { keyPath: 'skinName' });
 
-      request.onerror = function (event) {
-        reject('Error opening database');
-      };
-    });
+      // Additional setup or migrations can be added here if needed
+
+      // Resolve the Promise once the upgrade is complete
+      resolve(db);
+    };
+
+    request.onsuccess = function (event) {
+      resolve(event.target.result);
+    };
+
+    request.onerror = function (event) {
+      reject('Error opening database');
+    };
+  });
 }
+
 
 export function addData(db, data) {
     return new Promise((resolve, reject) => {

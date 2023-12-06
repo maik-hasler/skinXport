@@ -13,9 +13,8 @@
 .skinXport-hr {
     border: none;
     height: 1px;
-    /* Set the hr color */
-    color: #8e9191;  /* old IE */
-    background-color: #8e9191;  /* Modern Browsers */
+    color: #8e9191;
+    background-color: #8e9191;
 }
 
 .skinXport-minor-heading {

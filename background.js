@@ -1,9 +1,9 @@
-import { openDatabase, addData } from './database.js';
-
-chrome.alarms.create('fetchDataAlarm', {
-  periodInMinutes: 1,
-  when: Date.now()
-});
+async function checkAlarmState() {
+  const alarm = await chrome.alarms.get('fetchDataAlarm');
+  if (!alarm) {
+    await chrome.alarms.create('fetchDataAlarm', { periodInMinutes: 5 });
+  }
+}
 
 chrome.alarms.onAlarm.addListener(async alarm => {
   if (alarm.name === 'fetchDataAlarm') {
@@ -21,11 +21,14 @@ chrome.alarms.onAlarm.addListener(async alarm => {
         };
       }
 
-      const db = await openDatabase();
+      // Save the data to the database
 
-      await addData(db, transformedData);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   }
 });
+
+
+
+checkAlarmState();
