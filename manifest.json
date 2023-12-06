@@ -1,24 +1,31 @@
 {
   "manifest_version": 3,
-  "name": "Run script automatically",
-  "description": "Runs a script on www.example.com automatically when user installs the extension",
+  "name": "SkinXport",
   "version": "1.0",
+  "description": "Detailed view for sales on Skinport.",
   "permissions": [
-    "activeTab"
+    "tabs",
+    "activeTab",
+    "alarms"
   ],
   "host_permissions": [
-    "https://api.skinport.com/*"
+    "https://*.skinport.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "background.js",
+    "type": "module"
   },
+  "minimum_chrome_version": "92",
   "content_scripts": [
     {
       "js": [
-        "content-script.js"
+        "content.js"
       ],
       "matches": [
-        "https://skinport.com/de/"
+        "https://*.skinport.com/*"
+      ],
+      "css": [
+        "style.css"
       ]
     }
   ]

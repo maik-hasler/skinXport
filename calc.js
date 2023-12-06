@@ -30,5 +30,5 @@ if (minimumSellPrice !== null) {
   console.log(`Minimum Sell Price for >5% profit: ${minimumSellPrice}`);
 }
 
-Base formula: Selling Price = Cost Price / (1 - Selling Fee Percentage)
-https://www.quora.com/What-is-the-formula-to-calculate-a-selling-price-based-on-a-selling-fee-in-percentage
+// Base formula: Selling Price = Cost Price / (1 - Selling Fee Percentage)
+// https://www.quora.com/What-is-the-formula-to-calculate-a-selling-price-based-on-a-selling-fee-in-percentage

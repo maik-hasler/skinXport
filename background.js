@@ -1,30 +1,31 @@
-chrome.runtime.onMessage.addListener((message, sender, senderResponse) => {
-    if (message.type === "fetchData") {
-      fetchData(senderResponse);
-      return true; // Indicates that the response will be sent asynchronously
-    }
+import { openDatabase, addData } from './database.js';
+
+chrome.alarms.create('fetchDataAlarm', {
+  periodInMinutes: 5,
+  when: Date.now()
 });
 
-const fetchData = async (senderResponse) => {
+
+chrome.alarms.onAlarm.addListener(async alarm => {
+  if (alarm.name === 'fetchDataAlarm') {
     try {
-      const response = await fetch("https://api.skinport.com/v1/sales/history?app_id=730&currency=EUR");
+      const response = await fetch("https://api.skinport.com/v1/sales/history");
       const data = await response.json();
-  
+
       const transformedData = {};
-  
+
       data.forEach(item => {
         const marketHashName = item["market_hash_name"];
-  
         transformedData[marketHashName] = {
-          last_7_days: item["last_7_days"],
-          last_30_days: item["last_30_days"],
-          last_90_days: item["last_90_days"],
+          last_7_days: item["last_7_days"]
         };
       });
-  
-      senderResponse(transformedData);
+
+      const db = await openDatabase();
+
+      await addData(db, transformedData);
     } catch (error) {
       console.error("Error fetching data:", error);
-      senderResponse({ error: "Failed to fetch data" });
     }
-};
+  }
+});
