@@ -3,31 +3,24 @@
   "name": "SkinXport",
   "version": "1.0",
   "description": "Detailed view for sales on Skinport.",
-  "permissions": [
-    "tabs",
-    "activeTab",
-    "alarms"
-  ],
+  "permissions": ["storage", "unlimitedStorage"],
   "host_permissions": [
     "https://*.skinport.com/*"
   ],
   "background": {
-    "service_worker": "background.js",
-    "type": "module"
+    "service_worker": "background/index.js"
   },
-  "minimum_chrome_version": "92",
   "content_scripts": [
     {
       "js": [
-        "content.js"
+        "content_scripts/index.js"
       ],
       "matches": [
         "https://*.skinport.com/*"
       ],
       "css": [
         "style.css"
-      ],
-      "run_at": "document_end"
+      ]
     }
   ]
 }
