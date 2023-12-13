@@ -1,41 +1,3 @@
-let assets = {};
-
-function initialize() {
-    const fetchApiButton = document.createElement('button');
-    fetchApiButton.textContent = 'Fetch Assets';
-    fetchApiButton.onclick = function () {
-        chrome.runtime.sendMessage(
-            { contentScriptQuery: "querySalesHistory" },
-            (fetchedAssets) => {
-                console.log(`Fetched ${fetchedAssets.length} assets from Skinport.`);
-                for (let n = 0; n < fetchedAssets.length; n++) {
-                    assets[fetchedAssets[n].market_hash_name] = createAssetObject(fetchedAssets[n]);
-                }
-                console.log('Assets saved to variable.');
-                console.log(assets);
-            });
-    };
-    var marketHeader = document.querySelector('.CatalogPage-header');
-    marketHeader.appendChild(fetchApiButton);
-
-    const startObserver = document.createElement('button');
-    startObserver.textContent = 'Start Observer';
-    startObserver.onclick = function () {
-        const observer = new MutationObserver(appendQuickSummaries);
-        observer.observe(document.body, {subtree: true, childList: true});
-    };
-    marketHeader.appendChild(startObserver);
-}
-
-function createAssetObject(asset) {
-    return {
-        last_24_hours: asset['last_24_hours'],
-        last_7_days: asset['last_7_days'],
-        last_30_days: asset['last_30_days'],
-        last_90_days: asset['last_90_days']
-    };
-}
-
 const customTag = `tag-${Date.now()}`;
 
 function appendQuickSummaries() {
@@ -166,4 +128,34 @@ function addQuickSummaryForSale(sale, recentSaleStatistics) {
         return price;
 }
 
-initialize();
+let assets = {};
+
+function fetchSalesHistory() {
+    chrome.runtime.sendMessage({ contentScriptQuery: "querySalesHistory" }, (fetchedAssets) => {
+        fetchedAssets.forEach(asset => {
+            assets[asset.market_hash_name] = {
+                last_24_hours: asset['last_24_hours'],
+                last_7_days: asset['last_7_days'],
+                last_30_days: asset['last_30_days'],
+                last_90_days: asset['last_90_days']
+            };
+        });
+    });
+}
+
+const startupObserver = new MutationObserver((mutationsList, startupObserver) => {
+    for(let mutation of mutationsList) {
+        if(mutation.addedNodes.length) {
+            const marketHeader = document.querySelector('.CatalogPage-header');
+            if (marketHeader) {
+                fetchSalesHistory();
+                const observer = new MutationObserver(appendQuickSummaries);
+                observer.observe(document.body, {subtree: true, childList: true});
+                startupObserver.disconnect();
+                break;
+            }
+        }
+    }
+});
+
+startupObserver.observe(document, { childList: true, subtree: true });
