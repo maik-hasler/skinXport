@@ -37,11 +37,38 @@
     color: #f6f6f6;
     border-bottom: 2px solid #1d2021;
     width: 100%;
-    align-items: center;
     background: #2b2f30;
-    display: flex;
-    height: 70px;
-    justify-content: space-between;
-    padding: 0 30px;
+    padding: 15px 30px;
     position: relative;
+}
+
+.skinXport-configuration-section > .skinXport-configuration-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.skinXport-configuration-section > .skinXport-configuration-header > h2 {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 14px;
+    display: block;
+    color: #8a8c8d;
+    letter-spacing: 1.6px;
+    white-space: nowrap;
+    text-transform: uppercase;
+}
+
+.skinXport-button {
+    background-color: #4db5da;
+    border-radius: 3px;
+    height: 34px;
+    padding: 0 17px;
+    align-items: center;
+    display: flex;
+    font-size: 12px;
+    font-weight: 700;
+    justify-content: center;
+    color: #f6f6f6;
 }
