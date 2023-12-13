@@ -128,7 +128,6 @@ const startupObserver = new MutationObserver((mutationsList, startupObserver) =>
             const marketHeader = document.querySelector('.CatalogPage-content');
             if (marketHeader) {
                 fetchSalesHistory();
-                addConfigurationSection(marketHeader);
                 const observer = new MutationObserver(appendQuickSummaries);
                 observer.observe(document.body, { subtree: true, childList: true });
                 startupObserver.disconnect();
@@ -149,16 +148,6 @@ function fetchSalesHistory() {
             };
         });
     });
-}
-
-function addConfigurationSection(marketHeader) {
-    const configurationSection = document.createElement('div');
-    const configurationSectionTitle = document.createElement('h3');
-    configurationSectionTitle.innerText = 'Configuration';
-    configurationSectionTitle.className = 'skinXport-heading';
-    configurationSection.append(configurationSectionTitle);
-    configurationSection.className = 'skinXport-configuration-section';
-    marketHeader.prepend(configurationSection);
 }
 
 function getPriceForElement(element) {

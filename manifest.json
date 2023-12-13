@@ -13,7 +13,8 @@
   "content_scripts": [
     {
       "js": [
-        "content_scripts/index.js"
+        "content_scripts/index.js",
+        "content_scripts/configuration.js"
       ],
       "matches": [
         "https://*.skinport.com/*"
