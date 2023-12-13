@@ -120,18 +120,26 @@ function addQuickSummaryForSale(sale, recentSaleStatistics) {
         return lastXDaysContainer;
     }
 
-    function getPriceForElement(element) {
-        var priceAsString = element.querySelector('div.ItemPreview-priceValue > div').innerText;
-        var price = parseFloat(priceAsString.replace(/[^\d.,]/g, '').replace(',', '.'));
-        // var sellingPrice = price / (1 - 0.12 - profitPercentage);
-        // sellingPrice = sellingPrice.toFixed(2); // Round to 2 decimal places
-        return price;
-}
-
 let assets = {};
 
+const startupObserver = new MutationObserver((mutationsList, startupObserver) => {
+    for (let mutation of mutationsList) {
+        if (mutation.addedNodes.length) {
+            const marketHeader = document.querySelector('.CatalogPage-content');
+            if (marketHeader) {
+                fetchSalesHistory();
+                addConfigurationSection(marketHeader);
+                const observer = new MutationObserver(appendQuickSummaries);
+                observer.observe(document.body, { subtree: true, childList: true });
+                startupObserver.disconnect();
+                break;
+            }
+        }
+    }
+});
+
 function fetchSalesHistory() {
-    chrome.runtime.sendMessage({ contentScriptQuery: "querySalesHistory" }, (fetchedAssets) => {
+    chrome.runtime.sendMessage({ contentScriptQuery: 'querySalesHistory' }, (fetchedAssets) => {
         fetchedAssets.forEach(asset => {
             assets[asset.market_hash_name] = {
                 last_24_hours: asset['last_24_hours'],
@@ -143,19 +151,22 @@ function fetchSalesHistory() {
     });
 }
 
-const startupObserver = new MutationObserver((mutationsList, startupObserver) => {
-    for(let mutation of mutationsList) {
-        if(mutation.addedNodes.length) {
-            const marketHeader = document.querySelector('.CatalogPage-header');
-            if (marketHeader) {
-                fetchSalesHistory();
-                const observer = new MutationObserver(appendQuickSummaries);
-                observer.observe(document.body, {subtree: true, childList: true});
-                startupObserver.disconnect();
-                break;
-            }
-        }
-    }
-});
+function addConfigurationSection(marketHeader) {
+    const configurationSection = document.createElement('div');
+    const configurationSectionTitle = document.createElement('h3');
+    configurationSectionTitle.innerText = 'Configuration';
+    configurationSectionTitle.className = 'skinXport-heading';
+    configurationSection.append(configurationSectionTitle);
+    configurationSection.className = 'skinXport-configuration-section';
+    marketHeader.prepend(configurationSection);
+}
+
+function getPriceForElement(element) {
+    const querySelector = 'div.ItemPreview-priceValue > div';
+    var priceAsString = element.querySelector(querySelector).innerText;
+    var priceWithoutEuroSymbol = priceAsString.replace('€', '');
+    var priceWithoutEuroSymbolAndComma = priceWithoutEuroSymbol.replace(',', '');
+    return parseFloat(priceWithoutEuroSymbolAndComma);
+}
 
 startupObserver.observe(document, { childList: true, subtree: true });
