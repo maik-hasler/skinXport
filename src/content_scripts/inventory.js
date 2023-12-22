@@ -1,7 +1,7 @@
 const customTag = `tag-${Date.now()}`;
 
 function appendQuickSummaries() {
-    const sales = document.getElementsByClassName('CatalogPage-item');
+    const sales = document.getElementsByClassName('InventoryPage-item');
     for (let n = 0; n < sales.length; n++) {
         const sale = sales[n];
         if (!sale.hasAttribute(customTag)) {
@@ -76,47 +76,6 @@ function addQuickSummaryForSale(sale, recentSaleStatistics) {
         lastXDaysContainer.append(medianContainer);
         lastXDaysContainer.append(volContainer);
 
-        const breaker = document.createElement('br');
-        lastXDaysContainer.append(breaker);
-
-        const estimatedProfit = (recentSaleStatistics['avg'] - recentSaleStatistics['avg'] * 0.12 - price).toFixed(2);
-        const estimatedProfitContainer = document.createElement('div');
-        estimatedProfitContainer.innerText = `est. Profit in €: ${estimatedProfit}`;
-        estimatedProfitContainer.className = 'skinXport-text';
-
-        const estimatedProfitPercentage = (estimatedProfit / price * 100).toFixed(2);
-        const estimatedProfitPercentageContainer = document.createElement('div');
-        estimatedProfitPercentageContainer.innerText = `est. Profit in %: ${estimatedProfitPercentage}%`;
-        estimatedProfitPercentageContainer.className = 'skinXport-text';
-
-        if (estimatedProfitPercentage > 3){
-    estimatedProfitContainer.style.color = 'green';
-    estimatedProfitPercentageContainer.style.color = 'green';
-        }
-
-        lastXDaysContainer.append(estimatedProfitContainer);
-        lastXDaysContainer.append(estimatedProfitPercentageContainer);
-        lastXDaysContainer.append(breaker);
-
-        const estimatedProfitMedian = (recentSaleStatistics['median'] - recentSaleStatistics['median'] * 0.12 - price).toFixed(2);
-        const estimatedProfitMedianContainer = document.createElement('div');
-        estimatedProfitMedianContainer.innerText = `est. Profit in €: ${estimatedProfitMedian}`;
-        estimatedProfitMedianContainer.className = 'skinXport-text';
-
-        const estimatedProfitMedianPercentage = (estimatedProfitMedian / price * 100).toFixed(2);
-        const estimatedProfitPercentageMEdianContainer = document.createElement('div');
-        estimatedProfitPercentageMEdianContainer.innerText = `est. Profit in %: ${estimatedProfitMedianPercentage}%`;
-        estimatedProfitPercentageMEdianContainer.className = 'skinXport-text';
-
-        if (estimatedProfitMedianPercentage > 3){
-            estimatedProfitMedianContainer.style.color = 'green';
-    estimatedProfitPercentageMEdianContainer.style.color = 'green';
-        }
-
-        lastXDaysContainer.append(estimatedProfitMedianContainer);
-        lastXDaysContainer.append(estimatedProfitPercentageMEdianContainer);
-
-
         return lastXDaysContainer;
     }
 
@@ -125,14 +84,11 @@ let assets = {};
 const startupObserver = new MutationObserver((mutationsList, startupObserver) => {
     for (let mutation of mutationsList) {
         if (mutation.addedNodes.length) {
-            const marketHeader = document.querySelector('.CatalogPage-content');
-            if (marketHeader) {
-                fetchSalesHistory();
-                startupObserver.disconnect();
-                const observer = new MutationObserver(appendQuickSummaries);
-                observer.observe(document.body, { subtree: true, childList: true });
-                break;
-            }
+            fetchSalesHistory();
+            const observer = new MutationObserver(appendQuickSummaries);
+            observer.observe(document.body, { subtree: true, childList: true });
+            startupObserver.disconnect();
+            break;
         }
     }
 });

@@ -17,7 +17,18 @@
         "content_scripts/configuration.js"
       ],
       "matches": [
-        "https://*.skinport.com/*"
+        "https://skinport.com/market?sort=date&order=desc"
+      ],
+      "css": [
+        "style.css"
+      ]
+    },
+    {
+      "js": [
+        "content_scripts/inventory.js"
+      ],
+      "matches": [
+        "https://skinport.com/myitems/*"
       ],
       "css": [
         "style.css"
